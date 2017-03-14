@@ -4,7 +4,7 @@ abstract class AbstractKnapsackSolution {
         //
     }
 
-    abstract public static function ZeroOnePack(array $items, KnapsackPack $pack, bool $fitPackVolume = false);
+    abstract public static function fillPack(array $items, KnapsackPack $pack, bool $fitPackVolume = false);
 
     static function kp_max($a, $b) {
         if (is_null($a) && is_null($b)) {
@@ -37,7 +37,7 @@ abstract class AbstractKnapsackSolution {
     static function run($items, KnapsackPack $pack, bool $fitPackVolume = false) {
         $time_start = microtime(true);
 
-        $res = static::ZeroOnePack($items, $pack, $fitPackVolume);
+        $res = static::fillPack($items, $pack, $fitPackVolume);
         $res["Time Consumed (ms)"] = microtime(true) - $time_start;
 
         print_r($res);
