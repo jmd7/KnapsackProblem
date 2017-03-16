@@ -10,7 +10,7 @@ class KnapsackItem {
 
     public function __construct($name, $cost, $value, $count = 1) {
         if ($cost <= 0 || $value <= 0 || $count <= 0) {
-            throw new Exception("Knapsack item initialization failed. \n".
+            throw new \Exception("Knapsack item initialization failed. \n".
                 "[cost = $cost] [value = $value] [count = $count] \n");
         }
         $this->cost = $cost;
@@ -35,6 +35,10 @@ class KnapsackItem {
     }
 
     public function getName() {
+        return $this->name;
+    }
+
+    public function __toString() {
         return $this->name." [c:$this->cost][v:$this->value][n:$this->count]";
     }
 

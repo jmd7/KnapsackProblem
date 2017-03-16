@@ -16,21 +16,7 @@ class MultiplePack_Solution_01 extends AbstractKnapsackSolution {
         $g = array_fill(0, $N+1, array_fill(0, $V+1, array()));
 
         for ($i = 1; $i <= $N; $i++) {
-            for ($v = $items[$i-1]->getCost(); $v <= $V; $v++) {
-                for ($k = 1; $k <= $items[$i-1]->getCount() && $k*$items[$i-1]->getCost() <= $v; $k++) {
-                    $left = is_null($f[$i-1][$v-$k*$items[$i-1]->getCost()]) ? null : $f[$i-1][$v-$k*$items[$i-1]->getCost()] + $k*$items[$i-1]->getValue();
-                    $right = ($k == 0) ? $f[$i-1][$v] : $f[$i][$v];
-
-                    $f[$i][$v] = self::kp_max($left, $right);
-                    if ($f[$i][$v] == $left) {
-                        $g[$i][$v] = $g[$i-1][$v-$k*$items[$i-1]->getCost()];
-                        for ($gg = 0; $gg < $k; $gg++) array_push($g[$i][$v], $i);
-                    } else $g[$i][$v] = ($k == 0) ? $g[$i-1][$v] : $g[$i][$v];
-                    
-                    // echo "[$loop_count]\t$i\t$v\t$k\t$left\t$right\n";
-                    $loop_count++;
-                }
-            }
+            self::fillItem($items[$i-1], $i, $V, $f, $g, $loop_count);
         }
 
         // print_r($f); print_r($g);
@@ -42,22 +28,35 @@ class MultiplePack_Solution_01 extends AbstractKnapsackSolution {
         $V_real = $V;
         while ($f[$N][$V_real] == $f[$N][$V_real -1]) $V_real--;
         foreach ($g[$N][$V_real] as $i) {
-            if (!isset($res["Items of best solution"][$items[$i-1]->getName()]))
-                $res["Items of best solution"][$items[$i-1]->getName()] = 1;
-            else $res["Items of best solution"][$items[$i-1]->getName()]++;
+            if (!isset($res["Items of best solution"][$items[$i-1]->getName()])) {
+                $new_item = clone $items[$i-1];
+                $res["Items of best solution"][$items[$i-1]->getName()] = $new_item->setCount(1);
+            } else
+                $res["Items of best solution"][$items[$i-1]->getName()]->setCount(
+                    $res["Items of best solution"][$items[$i-1]->getName()]->getCount()+1);
             // echo $items[$g[$N][$i]]->getName()."\n";
         }
-        // $res["Items"] = $items;
-        // $res["Pack"] = $pack;
-
-        // $res["Ref - Value array of best solution"] = $f;
-        // $res["Ref - Item array of best solution"] = $g;
-
-        // echo "[loop:$loop_count] f[v] = ".$f[$N][$V]."\n";
         $res["Loop count"] = $loop_count;
         return $res;
-
     }
+
+    public static function fillItem(KnapsackItem $item, $i, $V, &$f, &$g, &$loop_count, $reserve = null) {
+        for ($v = $item->getCost(); $v <= $V; $v++) {
+            for ($k = 1; $k <= $item->getCount() && $k*$item->getCost() <= $v; $k++) {
+                $left = is_null($f[$i-1][$v-$k*$item->getCost()]) ? null : $f[$i-1][$v-$k*$item->getCost()] + $k*$item->getValue();
+                $right = ($k == 0) ? $f[$i-1][$v] : $f[$i][$v];
+
+                $f[$i][$v] = self::kp_max($left, $right);
+                if ($f[$i][$v] == $left) {
+                    $g[$i][$v] = $g[$i-1][$v-$k*$item->getCost()];
+                    for ($gg = 0; $gg < $k; $gg++) array_push($g[$i][$v], $i);
+                } else $g[$i][$v] = ($k == 0) ? $g[$i-1][$v] : $g[$i][$v];
+                
+                $loop_count++;
+            }
+        }
+    }
+    
 }
 
 // $items[] = new KnapsackItem("栗子", 4, 4500, 5);

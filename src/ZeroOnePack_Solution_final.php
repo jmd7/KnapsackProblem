@@ -19,15 +19,7 @@ class ZeroOnePack_Solution_final extends AbstractKnapsackSolution {
             $sum = 0;
             for ($j = $i; $j < $N; $j++) $sum += $items[$j]->getCost();
             $bound = self::kp_max($V-$sum, $items[$i]->getCost());
-            for ($v = $V; $v >= $bound; $v--) {
-                $left = is_null($f[$v-$items[$i]->getCost()]) ? null : $f[$v-$items[$i]->getCost()] + $items[$i]->getValue();
-                $right = $f[$v];
-                $left_item = $i;
-                $right_item = $g[$v];
-                
-                $f[$v] = self::kp_max_tracing($left, $right, $g[$v], $left_item, $right_item);
-                $loop_count++;
-            }
+            self::fillItem($items[$i], $i, $V, $f, $g, $loop_count, $bound);
         }
 
         // print_r($f); print_r($g);
@@ -39,17 +31,22 @@ class ZeroOnePack_Solution_final extends AbstractKnapsackSolution {
         $V_real = $V;
         while ($f[$V_real] == $f[$V_real -1]) $V_real--;
         for ($i = $V_real; $i > 0 && $g[$i] >= 0; $i = $i - $items[$g[$i]]->getCost()) {
-            $res["Items of best solution"][] = $items[$g[$i]]->getName();
+            $res["Items of best solution"][] = sprintf("%s", $items[$g[$i]]);
             // echo $items[$g[$i]]->getName()."\n";
         }
-        // $res["Items"] = $items;
-        // $res["Pack"] = $pack;
-
-        // $res["Ref - Value array of best solution"] = $f;
-        // $res["Ref - Item array of best solution"] = $g;
-
-        // echo "[loop:$loop_count] f[v] = $f[$V]"."\n";*/
         return $res;
+    }
+
+    public static function fillItem(KnapsackItem $item, $i, $V, &$f, &$g, &$loop_count, $bound = null) {
+        for ($v = $V; $v >= $bound; $v--) {
+            $left = is_null($f[$v-$item->getCost()]) ? null : $f[$v-$item->getCost()] + $item->getValue();
+            $right = $f[$v];
+            $left_item = $i;
+            $right_item = $g[$v];
+            
+            $f[$v] = self::kp_max_tracing($left, $right, $g[$v], $left_item, $right_item);
+            $loop_count++;
+        }
     }
 }
 

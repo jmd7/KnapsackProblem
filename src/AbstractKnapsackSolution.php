@@ -10,6 +10,8 @@ abstract class AbstractKnapsackSolution {
 
     abstract public static function fillPack(array $items, KnapsackPack $pack, bool $fitPackVolume = false);
 
+    abstract public static function fillItem(KnapsackItem $item, $i, $V, &$f, &$g, &$loop_count, $reserve = null);
+
     static function kp_max($a, $b) {
         if (is_null($a) && is_null($b)) {
             return null;
@@ -71,10 +73,12 @@ abstract class AbstractKnapsackSolution {
         $time_start = microtime(true);
 
         $res = static::fillPack($items, $pack, $fitPackVolume);
+
+        // $res["Items"] = $items;
+        // $res["Pack"] = $pack;
         $res["Time Consumed (ms)"] = microtime(true) - $time_start;
 
         print_r($res);
-        //echo "\nTime consumed : $timediff ms.\n\n";
     }
 }
 ?>

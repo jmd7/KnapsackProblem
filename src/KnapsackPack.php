@@ -8,7 +8,7 @@ class KnapsackPack {
 
     public function __construct($name, $volume) {
         if ($volume <= 0) {
-            throw new Exception("Knapsack pack initialization failed. \n".
+            throw new \Exception("Knapsack pack initialization failed. \n".
                 "[volume = $volume] \n");
         }
         $this->volume = $volume;

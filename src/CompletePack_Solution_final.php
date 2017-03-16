@@ -40,15 +40,7 @@ class CompletePack_Solution_final extends AbstractKnapsackSolution {
         $g = array_fill(0, $V+1, -1);
 
         for ($i = 1; $i <= $N; $i++) {
-            for ($v = $items[$i-1]->getCost(); $v <= $V; $v++) {
-                $left = is_null($f[$v-$items[$i-1]->getCost()]) ? null : $f[$v-$items[$i-1]->getCost()] + $items[$i-1]->getValue();
-                $right = $f[$v];
-                $left_item = $i;
-                $right_item = $g[$v];
-                
-                $f[$v] = self::kp_max_tracing($left, $right, $g[$v], $left_item, $right_item);
-                $loop_count++;
-            }
+            self::fillItem($items[$i-1], $i, $V, $f, $g, $loop_count);
         }
 
         // print_r($f); print_r($g);
@@ -59,19 +51,28 @@ class CompletePack_Solution_final extends AbstractKnapsackSolution {
         $V_real = $V;
         while ($f[$V_real] == $f[$V_real -1]) $V_real--;
         for ($i = $V_real; $i > 0 && $g[$i] >= 0; $i = $i - $items[$g[$i]-1]->getCost()) {
-            $res["Items of best solution"][] = $items[$g[$i]-1]->getName();
+            if (!isset($res["Items of best solution"][$items[$g[$i]-1]->getName()])) {
+                $new_item = clone $items[$g[$i]-1];
+                $res["Items of best solution"][$items[$g[$i]-1]->getName()] = $new_item->setCount(1);
+            } else
+                $res["Items of best solution"][$items[$g[$i]-1]->getName()]->setCount(
+                    $res["Items of best solution"][$items[$g[$i]-1]->getName()]->getCount()+1);
             // echo $items[$g[$N][$i]]->getName()."\n";
         }
-        // $res["Items"] = $items;
-        // $res["Pack"] = $pack;
-
-        // $res["Ref - Value array of best solution"] = $f;
-        // $res["Ref - Item array of best solution"] = $g;
-
-        //echo "[loop:$loop_count] f[v] = ".$f[$N][$V]."\n";
         $res["Loop count"] = $loop_count;
         return $res;
+    }
 
+    public static function fillItem(KnapsackItem $item, $i, $V, &$f, &$g, &$loop_count, $reserve = null) {
+        for ($v = $item->getCost(); $v <= $V; $v++) {
+            $left = is_null($f[$v-$item->getCost()]) ? null : $f[$v-$item->getCost()] + $item->getValue();
+            $right = $f[$v];
+            $left_item = $i;
+            $right_item = $g[$v];
+            
+            $f[$v] = self::kp_max_tracing($left, $right, $g[$v], $left_item, $right_item);
+            $loop_count++;
+        }
     }
 }
 
@@ -83,13 +84,13 @@ class CompletePack_Solution_final extends AbstractKnapsackSolution {
 
 // $pack = new KnapsackPack("背包", 29);
 
-// // //$items[] = new KnapsackItem("栗子", 4, 4500, INFINITE);
-// // $items[] = new KnapsackItem("苹果", 5, 5700, INFINITE);
-// // $items[] = new KnapsackItem("橘子", 2, 2270, INFINITE);
-// // //$items[] = new KnapsackItem("草莓", 1, 1100, INFINITE);
-// // //$items[] = new KnapsackItem("甜瓜", 6, 5600, INFINITE);
+// //$items[] = new KnapsackItem("栗子", 4, 4500, INFINITE);
+// $items[] = new KnapsackItem("苹果", 5, 5700, INFINITE);
+// $items[] = new KnapsackItem("橘子", 2, 2270, INFINITE);
+// //$items[] = new KnapsackItem("草莓", 1, 1100, INFINITE);
+// //$items[] = new KnapsackItem("甜瓜", 6, 5600, INFINITE);
 
-// // $pack = new KnapsackPack("背包", 14);
+// $pack = new KnapsackPack("背包", 14);
 
 // CompletePack_Solution_final::run($items, $pack, false);
 // CompletePack_Solution_final::run($items, $pack, true);
