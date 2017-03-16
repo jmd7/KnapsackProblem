@@ -1,5 +1,7 @@
 <?php
 
+namespace rg4\knapsack;
+
 class KnapsackPack {
     private $name = "Knapsack Pack";
     private $volume;

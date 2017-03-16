@@ -1,10 +1,9 @@
 <?php
+namespace rg4\knapsack;
 
-require_once "KnapsackItem.php";
-require_once "KnapsackPack.php";
-require_once "AbstractKnapsackSolution.php";
+require_once 'Autoloader.php';
 
-class ZeroOnePack_Solution_02 extends AbstractKnapsackSolution {
+class ZeroOnePack_Solution_final extends AbstractKnapsackSolution {
     public static function fillPack(array $items, KnapsackPack $pack, bool $fitPackVolume = false) {
         $N = count($items);
         $V = $pack->getVolume();
@@ -17,7 +16,10 @@ class ZeroOnePack_Solution_02 extends AbstractKnapsackSolution {
         $g = array_fill(0, count($f), -1);
 
         for ($i = 0; $i < $N; $i++) {
-            for ($v = $V; $v >= $items[$i]->getCost(); $v--) {
+            $sum = 0;
+            for ($j = $i; $j < $N; $j++) $sum += $items[$j]->getCost();
+            $bound = self::kp_max($V-$sum, $items[$i]->getCost());
+            for ($v = $V; $v >= $bound; $v--) {
                 $left = is_null($f[$v-$items[$i]->getCost()]) ? null : $f[$v-$items[$i]->getCost()] + $items[$i]->getValue();
                 $right = $f[$v];
                 $left_item = $i;
@@ -51,15 +53,15 @@ class ZeroOnePack_Solution_02 extends AbstractKnapsackSolution {
     }
 }
 
-$items[] = new KnapsackItem("栗子", 4, 4500, 1);
-$items[] = new KnapsackItem("苹果", 5, 5700, 1);
-$items[] = new KnapsackItem("橘子", 2, 2250, 1);
-$items[] = new KnapsackItem("草莓", 1, 1100, 1);
-$items[] = new KnapsackItem("甜瓜", 6, 6700, 1);
+// $items[] = new KnapsackItem("栗子", 4, 4500, 1);
+// $items[] = new KnapsackItem("苹果", 5, 5700, 1);
+// $items[] = new KnapsackItem("橘子", 2, 2250, 1);
+// $items[] = new KnapsackItem("草莓", 1, 1100, 1);
+// $items[] = new KnapsackItem("甜瓜", 6, 6700, 1);
 
-$pack = new KnapsackPack("背包", 13);
+// $pack = new KnapsackPack("背包", 13);
 
-ZeroOnePack_Solution_02::run($items, $pack, false);
-ZeroOnePack_Solution_02::run($items, $pack, true);
+// ZeroOnePack_Solution_final::run($items, $pack, false);
+// ZeroOnePack_Solution_final::run($items, $pack, true);
 
 ?>

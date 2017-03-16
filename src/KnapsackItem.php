@@ -1,5 +1,7 @@
 <?php
 
+namespace rg4\knapsack;
+
 class KnapsackItem {
     private $name = "Knapsack Item";
     private $cost;

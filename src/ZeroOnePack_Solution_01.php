@@ -1,8 +1,7 @@
 <?php
+namespace rg4\knapsack;
 
-require_once "KnapsackItem.php";
-require_once "KnapsackPack.php";
-require_once "AbstractKnapsackSolution.php";
+require_once 'Autoloader.php';
 
 class ZeroOnePack_Solution_01 extends AbstractKnapsackSolution {
     public static function fillPack(array $items, KnapsackPack $pack, bool $fitPackVolume = false) {

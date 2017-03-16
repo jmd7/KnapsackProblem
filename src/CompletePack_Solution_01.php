@@ -1,39 +1,16 @@
 <?php
+namespace rg4\knapsack;
+
+require_once 'Autoloader.php';
 
 define('INFINITE', 999999);
 
-require_once "KnapsackItem.php";
-require_once "KnapsackPack.php";
-require_once "AbstractKnapsackSolution.php";
-
-class CompletePack_Solution_02 extends AbstractKnapsackSolution {
+class CompletePack_Solution_01 extends AbstractKnapsackSolution {
     public static function fillPack(array $items, KnapsackPack $pack, bool $fitPackVolume = false) {
         $N = count($items);
         $V = $pack->getVolume();
         $loop_count = 0;
 
-        if (!$fitPackVolume) {
-            $item_to_be_removed = array();
-            for ($i = 0; $i < $N; $i++) {
-                if ($items[$i]->getCost() > $V) {
-                    $item_to_be_removed[] = $i;
-                    continue;
-                }
-
-                for ($j = $i + 1; $j < $N; $j++) {
-                    if ($items[$i]->getCost() <= $items[$j]->getCost() &&
-                        $items[$i]->getValue() >= $items[$j]->getValue())
-                            $item_to_be_removed[] = $j;
-                    else if ($items[$i]->getCost() >= $items[$j]->getCost() &&
-                        $items[$i]->getValue() <= $items[$j]->getValue())
-                            $item_to_be_removed[] = $i;
-                }
-            }
-            foreach ($item_to_be_removed as $idx) unset($items[$idx]);
-            $items = array_merge($items);
-            $N = count($items);
-        }
-        
         if ($fitPackVolume) {
             $f = array_fill(0, $N+1, array_fill(0, $V+1, null));
             for ($i = 0; $i <= $N; $i++) $f[$i][0] = 0;
@@ -58,6 +35,7 @@ class CompletePack_Solution_02 extends AbstractKnapsackSolution {
         //print_r($f); print_r($g);
 
         $res = array();
+        $res["Loop count"] = $loop_count;
         $res["Value of best solution"] = $f[$N][$V];
         $res["Items of best solution"] = array();
         $V_real = $V;
@@ -73,7 +51,6 @@ class CompletePack_Solution_02 extends AbstractKnapsackSolution {
         // $res["Ref - Item array of best solution"] = $g;
 
         //echo "[loop:$loop_count] f[v] = ".$f[$N][$V]."\n";
-        $res["Loop count"] = $loop_count;
         return $res;
 
     }
@@ -81,12 +58,12 @@ class CompletePack_Solution_02 extends AbstractKnapsackSolution {
 
 //$items[] = new KnapsackItem("栗子", 4, 4500, INFINITE);
 $items[] = new KnapsackItem("苹果", 5, 5700, INFINITE);
-//$items[] = new KnapsackItem("橘子", 2, 2250, INFINITE);
+$items[] = new KnapsackItem("橘子", 2, 2270, INFINITE);
 //$items[] = new KnapsackItem("草莓", 1, 1100, INFINITE);
-$items[] = new KnapsackItem("甜瓜", 6, 5600, INFINITE);
+//$items[] = new KnapsackItem("甜瓜", 6, 5600, INFINITE);
 
-$pack = new KnapsackPack("背包", 6);
+$pack = new KnapsackPack("背包", 14);
 
-CompletePack_Solution_02::run($items, $pack, false);
-CompletePack_Solution_02::run($items, $pack, true);
+CompletePack_Solution_01::run($items, $pack, false);
+CompletePack_Solution_01::run($items, $pack, true);
 ?>
