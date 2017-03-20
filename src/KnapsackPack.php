@@ -23,7 +23,7 @@ class KnapsackPack {
     }
 
     public function getName() {
-        return $this->name." [V:$this->volume]";
+        return $this->name;
     }
 
     public function setVolume($volume) {
@@ -34,10 +34,16 @@ class KnapsackPack {
     }
 
     public function setName($name) {
-        if (isEmpty($name)) {
+        if (empty($name)) {
             $this->name = "Knapsack Pack";
         } else $this->name = $name;
+        return $this;
     }
+
+    public function __toString() {
+        return $this->name." [V:$this->volume]";
+    }
+
 }
 
 ?>

@@ -20,7 +20,7 @@ spl_autoload_register(function ($class) {
     $len = strlen($prefix);
     if (strncmp($prefix, $class, $len) !== 0) {
         // no, move to the next registered autoloader
-        return;
+        return; // @codeCoverageIgnore
     }
     // get the relative class name
     $relative_class = substr($class, $len);

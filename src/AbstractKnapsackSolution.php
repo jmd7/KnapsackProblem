@@ -4,13 +4,10 @@ namespace rg4\knapsack;
 require_once 'Autoloader.php';
 
 abstract class AbstractKnapsackSolution {
-    private function __construct() {
-        //
-    }
 
     abstract public static function fillPack(array $items, KnapsackPack $pack, bool $fitPackVolume = false);
 
-    abstract public static function fillItem(KnapsackItem $item, $i, $V, &$f, &$g, &$loop_count, $reserve = null);
+    abstract public static function fillItem(KnapsackItem $item, $i, $V, &$f, &$g, &$loop_count, &$reserve = null);
 
     static function kp_max($a, $b) {
         if (is_null($a) && is_null($b)) {
@@ -61,12 +58,35 @@ abstract class AbstractKnapsackSolution {
         if (!is_array($items) || empty($items) || !$items[0] instanceof KnapsackItem) return;
 
         $res_items = array();
+        $names = array();
         foreach ($items as $item) {
-            for ($i = 0; $i < $item->getCount(); $i++)
-                $res_items[] = new KnapsackItem($item->getName(), $item->getCost(), $item->getValue(), 1);
+            for ($i = 1; $i <= $item->getCount(); $i++) {
+                if (array_key_exists($item->getName(), $names)) $names[$item->getName()]++;
+                else $names[$item->getName()] = 1;
+                $res_items[] = new KnapsackItem(
+                    $item->getName()." ".$names[$item->getName()], 
+                    $item->getCost(), 
+                    $item->getValue(), 
+                    1
+                );
+            }
         }
 
         $items = $res_items;
+    }
+
+    /**
+     * @codeCoverageIgnore
+    **/
+    static function print_array(array $arr) {
+        foreach ($arr as $v1) {
+            if (is_array($v1)) {
+                self::print_array($v1);
+            } else {
+                echo $v1."\t";
+            }
+        }
+        echo PHP_EOL;
     }
 
     static function run($items, KnapsackPack $pack, bool $fitPackVolume = false) {

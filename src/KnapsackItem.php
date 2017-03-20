@@ -2,6 +2,8 @@
 
 namespace rg4\knapsack;
 
+define('INFINITE', 999999);
+
 class KnapsackItem {
     private $name = "Knapsack Item";
     private $cost;
@@ -17,7 +19,7 @@ class KnapsackItem {
         $this->value = $value;
         $this->count = $count;
 
-        if (empty($name)) {
+        if (empty(trim($name))) {
             $this->name = "Knapsack Item";
         } else $this->name = $name;
     }
@@ -64,9 +66,10 @@ class KnapsackItem {
     }
 
     public function setName($name) {
-        if (isEmpty($name)) {
+        if (empty($name)) {
             $this->name = "Knapsack Item";
         } else $this->name = $name;
+        return $this;
     }
 }
 
