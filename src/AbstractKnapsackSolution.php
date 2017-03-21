@@ -1,13 +1,13 @@
 <?php
 namespace rg4\knapsack;
 
-require_once 'Autoloader.php';
+require_once 'autoload.php';
 
 abstract class AbstractKnapsackSolution {
 
     abstract public static function fillPack(array $items, KnapsackPack $pack, bool $fitPackVolume = false);
 
-    abstract public static function fillItem(KnapsackItem $item, $i, $V, &$f, &$g, &$loop_count, &$reserve = null);
+    abstract public static function fillItem(KnapsackItem $item, $i, $V, &$f, &$g, &$loop_count, &...$reserves);
 
     static function kp_max($a, $b) {
         if (is_null($a) && is_null($b)) {
@@ -89,6 +89,9 @@ abstract class AbstractKnapsackSolution {
         echo PHP_EOL;
     }
 
+    /**
+     * @codeCoverageIgnore
+    **/
     static function run($items, KnapsackPack $pack, bool $fitPackVolume = false) {
         $time_start = microtime(true);
 

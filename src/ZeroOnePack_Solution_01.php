@@ -1,7 +1,7 @@
 <?php
 namespace rg4\knapsack;
 
-require_once 'Autoloader.php';
+require_once 'autoload.php';
 
 class ZeroOnePack_Solution_01 extends AbstractKnapsackSolution {
     public static function fillPack(array $items, KnapsackPack $pack, bool $fitPackVolume = false) {
@@ -18,22 +18,27 @@ class ZeroOnePack_Solution_01 extends AbstractKnapsackSolution {
         for ($i = 1; $i <= $N; $i++) {
             self::fillItem($items[$i-1], $i, $V, $f, $g, $loop_count);
         }
-        // print_r($f); print_r($g);
+        // self::print_array($f); self::print_array($g);
 
         $res = array();
         $res["Loop count"] = $loop_count;
         $res["Value of best solution"] = $f[$N][$V];
         $res["Items of best solution"] = array();
-        $V_real = $V;
-        while ($f[$N][$V_real] == $f[$N][$V_real -1]) $V_real--;
-        for ($i = $V_real; $i > 0 && $g[$i] >= 0; $i = $i - $items[$g[$i]-1]->getCost()) {
-            $res["Items of best solution"][] = sprintf("%s", $items[$g[$i]-1]);
-            // echo $items[$g[$i]]->getName()."\n";
+
+        $i = $N;
+        $v = $V;
+        while ($i > 0 && $v >0) {
+            if ($f[$i][$v] == $f[$i-1][$v - $items[$i-1]->getCost()] + $items[$i-1]->getValue()) {
+                $res["Items of best solution"][] = $items[$i-1]; //sprintf("%s", $items[$i-1]);
+                $v = $v - $items[$i-1]->getCost();
+                // echo $items[$i-1]]."\n";
+            }
+            $i--;
         }
         return $res;
     }
 
-    public static function fillItem(KnapsackItem $item, $i, $V, &$f, &$g, &$loop_count, $reserve = null) {
+    public static function fillItem(KnapsackItem $item, $i, $V, &$f, &$g, &$loop_count, &...$reserves) {
         for ($v = $item->getCost(); $v <= $V; $v++) {
             $left = is_null($f[$i-1][$v-$item->getCost()]) ? null : $f[$i-1][$v-$item->getCost()] + $item->getValue();
             $right = $f[$i-1][$v];
@@ -45,16 +50,5 @@ class ZeroOnePack_Solution_01 extends AbstractKnapsackSolution {
         }
     }
 }
-
-$items[] = new KnapsackItem("栗子", 4, 4500, 1);
-$items[] = new KnapsackItem("苹果", 5, 5700, 1);
-$items[] = new KnapsackItem("橘子", 2, 2250, 1);
-$items[] = new KnapsackItem("草莓", 1, 1100, 1);
-$items[] = new KnapsackItem("甜瓜", 6, 6700, 1);
-
-$pack = new KnapsackPack("背包", 13);
-
-ZeroOnePack_Solution_01::run($items, $pack, false);
-ZeroOnePack_Solution_01::run($items, $pack, true);
 
 ?>
