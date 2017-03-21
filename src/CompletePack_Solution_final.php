@@ -1,9 +1,7 @@
 <?php
 namespace rg4\knapsack;
 
-require_once 'Autoloader.php';
-
-define('INFINITE', 999999);
+require_once 'autoload.php';
 
 class CompletePack_Solution_final extends AbstractKnapsackSolution {
     public static function fillPack(array $items, KnapsackPack $pack, bool $fitPackVolume = false) {
@@ -63,7 +61,7 @@ class CompletePack_Solution_final extends AbstractKnapsackSolution {
         return $res;
     }
 
-    public static function fillItem(KnapsackItem $item, $i, $V, &$f, &$g, &$loop_count, $reserve = null) {
+    public static function fillItem(KnapsackItem $item, $i, $V, &$f, &$g, &$loop_count, &...$reserves) {
         for ($v = $item->getCost(); $v <= $V; $v++) {
             $left = is_null($f[$v-$item->getCost()]) ? null : $f[$v-$item->getCost()] + $item->getValue();
             $right = $f[$v];
@@ -76,22 +74,4 @@ class CompletePack_Solution_final extends AbstractKnapsackSolution {
     }
 }
 
-// // $items[] = new KnapsackItem("栗子", 4, 4500, 5);
-// $items[] = new KnapsackItem("苹果", 5, 5700, 7);
-// // $items[] = new KnapsackItem("橘子", 2, 2300, 7);
-// $items[] = new KnapsackItem("草莓", 3, 1200, 5);
-// // $items[] = new KnapsackItem("甜瓜", 6, 5600, 2);
-
-// $pack = new KnapsackPack("背包", 29);
-
-// //$items[] = new KnapsackItem("栗子", 4, 4500, INFINITE);
-// $items[] = new KnapsackItem("苹果", 5, 5700, INFINITE);
-// $items[] = new KnapsackItem("橘子", 2, 2270, INFINITE);
-// //$items[] = new KnapsackItem("草莓", 1, 1100, INFINITE);
-// //$items[] = new KnapsackItem("甜瓜", 6, 5600, INFINITE);
-
-// $pack = new KnapsackPack("背包", 14);
-
-// CompletePack_Solution_final::run($items, $pack, false);
-// CompletePack_Solution_final::run($items, $pack, true);
 ?>

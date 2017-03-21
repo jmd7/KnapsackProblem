@@ -2,13 +2,9 @@
 
 require_once 'autoload.php';
 
-use rg4\knapsack\AbstractKnapsackSolution as aKS;
 use rg4\knapsack\KnapsackItem as KI;
 use rg4\knapsack\KnapsackPack as KP;
 use PHPUnit\Framework\TestCase;
-
-define('KEY_MAX_VALUE', "Value of best solution");
-define('KEY_MAX_ITEMS', "Items of best solution");
 
 class ZeroOnePackSolutionTest extends TestCase {
     private $solutions = [

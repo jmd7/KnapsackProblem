@@ -6,6 +6,9 @@ use rg4\knapsack\AbstractKnapsackSolution as aKS;
 use rg4\knapsack\KnapsackItem as KI;
 use PHPUnit\Framework\TestCase;
 
+define('KEY_MAX_VALUE', "Value of best solution");
+define('KEY_MAX_ITEMS', "Items of best solution");
+
 class AbstractKnapsackSolutionTest extends TestCase {
     public function testUnableConstruct() {
         $this->expectException(Error::class);
