@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Knapsack Problem" default="gen-report" basedir=".">
+    <autoloader autoloaderpath="vendor/autoload.php"/>
+    <autoloader autoloaderpath="src/autoload.php"/>
+    <autoloader autoloaderpath="test/autoload.php"/>
+
+    <target name="unit-testing">
+        <exec command="phpunit"/>
+    </target>
+
+    <target name="gen-report" depends="unit-testing">
+        <phpunitreport infile="log.junit.xml"
+            format="frames"
+            todir="test_result/"
+            styledir="vendor/phing/phing/etc/"
+            />
+    </target>
+</project>

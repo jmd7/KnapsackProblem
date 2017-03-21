@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="src/Autoloader.php">
+<phpunit bootstrap="src/autoload.php">
     <testsuites>
         <testsuite name="KnapsackProblem">
             <directory suffix="Test.php">test</directory>
@@ -10,4 +10,8 @@
             <directory>src</directory>
         </whitelist>
     </filter>
+    <logging>
+        <log type="coverage-html" target="coverage/"/>
+        <log type="junit" target="log.junit.xml" logIncompleteSkipped="false"/>
+    </logging>
 </phpunit>

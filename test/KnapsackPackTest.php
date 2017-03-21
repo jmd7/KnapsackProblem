@@ -1,5 +1,7 @@
 <?php
 
+require_once 'autoload.php';
+
 use PHPUnit\Framework\TestCase;
 
 class KnapsackPackTest extends TestCase {

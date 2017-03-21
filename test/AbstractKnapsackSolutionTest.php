@@ -1,5 +1,7 @@
 <?php
 
+require_once 'autoload.php';
+
 use rg4\knapsack\AbstractKnapsackSolution as aKS;
 use rg4\knapsack\KnapsackItem as KI;
 use PHPUnit\Framework\TestCase;

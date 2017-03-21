@@ -1,3 +1,5 @@
 /vendor/**
 /coverage/**
+/test_result/**
 /composer.lock
+/log.junit.xml
