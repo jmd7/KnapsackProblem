@@ -27,11 +27,13 @@ class ZeroOnePack_Solution_01 extends AbstractKnapsackSolution {
 
         $i = $N;
         $v = $V;
-        while ($i > 0 && $v >0) {
-            if ($f[$i][$v] == $f[$i-1][$v - $items[$i-1]->getCost()] + $items[$i-1]->getValue()) {
-                $res["Items of best solution"][] = $items[$i-1]; //sprintf("%s", $items[$i-1]);
-                $v = $v - $items[$i-1]->getCost();
-                // echo $items[$i-1]]."\n";
+        while ($i > 0 && $v > 0) {
+            if ($v >= $items[$i-1]->getCost()) {
+                if ($f[$i][$v] == $f[$i-1][$v - $items[$i-1]->getCost()] + $items[$i-1]->getValue()) {
+                    $res["Items of best solution"][] = $items[$i-1]; //sprintf("%s", $items[$i-1]);
+                    $v = $v - $items[$i-1]->getCost();
+                    // echo "$i\t$v\t" . $items[$i-1]."\n";
+                }
             }
             $i--;
         }
