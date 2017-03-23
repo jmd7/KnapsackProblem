@@ -6,7 +6,7 @@
     <autoloader autoloaderpath="test/autoload.php"/>
 
     <target name="unit-testing">
-        <exec command="phpunit"/>
+        <exec command="phpunit" passthru="true"/>
     </target>
 
     <target name="gen-report" depends="unit-testing">

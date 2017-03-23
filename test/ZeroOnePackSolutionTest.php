@@ -2,6 +2,7 @@
 
 require_once 'autoload.php';
 
+use KnapsackSolutionTestHelper as Helper;
 use rg4\knapsack\KnapsackItem as KI;
 use rg4\knapsack\KnapsackPack as KP;
 use PHPUnit\Framework\TestCase;
@@ -13,32 +14,6 @@ class ZeroOnePackSolutionTest extends TestCase {
         "rg4\\knapsack\\ZeroOnePack_Solution_final",
     ];
 
-    function checkCostAndValue($items, $pack, $res, $fit, $expect_max_value = null) {
-        $this->assertTrue(is_array($res));
-        $this->assertTrue(array_key_exists(KEY_MAX_VALUE, $res));
-        if (!is_null($expect_max_value) and is_numeric($expect_max_value))
-            $this->assertEquals($res[KEY_MAX_VALUE], $expect_max_value);
-        
-        $this->assertTrue(array_key_exists(KEY_MAX_ITEMS, $res));
-        $this->assertTrue(is_array($res[KEY_MAX_ITEMS]));
-        $this->assertNotEmpty($res[KEY_MAX_ITEMS]);
-        $cost = $value = 0;
-        foreach ($res[KEY_MAX_ITEMS] as $item) {
-            $cost += $item->getCost();
-            $value += $item->getValue();
-        }
-        $this->assertEquals($res[KEY_MAX_VALUE], $value);
-        if ($fit) $this->assertEquals($pack->getVolume(), $cost);
-        else $this->assertLessThanOrEqual($pack->getVolume(), $cost);
-    }
-
-    function checkResultSets($results) {
-        foreach ($results as $res) {
-            $this->assertEquals($results[0][KEY_MAX_VALUE], $res[KEY_MAX_VALUE]);
-            //$this->assertEquals($results[0][KEY_MAX_ITEMS], $res[KEY_MAX_ITEMS]);
-        }
-    }
-
     public function test01() {
         $items[] = new KI("栗子", 4, 4500, 1);
         $items[] = new KI("苹果", 5, 5700, 1);
@@ -48,19 +23,7 @@ class ZeroOnePackSolutionTest extends TestCase {
 
         $pack = new KP("背包", 13);
 
-        $res_no_fit = [];
-        $res_do_fit = [];
-        foreach ($this->solutions as $class) {
-            $res = $class::fillPack($items, $pack ,false);
-            $this->checkCostAndValue($items, $pack, $res, false, 14650);
-            $res_no_fit[] = $res;
-
-            $res = $class::fillPack($items, $pack ,true);
-            $this->checkCostAndValue($items, $pack, $res, true, 14650);
-            $res_do_fit[] = $res;
-        }
-        $this->checkResultSets($res_no_fit);
-        $this->checkResultSets($res_do_fit);
+        Helper::getInstance()->performChecking($this->solutions, $items, $pack, 14650);
     }
 
     public function test02() {
@@ -101,18 +64,17 @@ class ZeroOnePackSolutionTest extends TestCase {
 
         $pack = new KP("背包", 43);
         
-        $res_no_fit = [];
-        $res_do_fit = [];
-        foreach ($this->solutions as $class) {
-            $res = $class::fillPack($items, $pack ,false);
-            $this->checkCostAndValue($items, $pack, $res, false, 49100);
-            $res_no_fit[] = $res;
-
-            $res = $class::fillPack($items, $pack ,true);
-            $this->checkCostAndValue($items, $pack, $res, true, 49100);
-            $res_do_fit[] = $res;
-        }
-        $this->checkResultSets($res_no_fit);
-        $this->checkResultSets($res_do_fit);
+        Helper::getInstance()->performChecking($this->solutions, $items, $pack, 49100);
     }
+
+    public function test03() {
+        $items[] = new KI("#1", 3, 4, 1);
+        $items[] = new KI("#2", 4, 6, 1);
+        $items[] = new KI("#3", 5, 7, 1);
+
+        $pack = new KP("背包", 10);
+
+        Helper::getInstance()->performChecking($this->solutions, $items, $pack);
+    }
+
 }
