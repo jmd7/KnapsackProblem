@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
 class KnapsackSolutionTestHelper extends TestCase {
     protected $key_max_value =  "Value of best solution";
     protected $key_max_items = "Items of best solution";
+    protected $key_loop_count = "Loop count";
 
     public function __construct() {
         //
@@ -26,8 +27,8 @@ class KnapsackSolutionTestHelper extends TestCase {
         // $this->assertNotEmpty($res[$this->key_max_items]);
         $cost = $value = 0;
         foreach ($res[$this->key_max_items] as $item) {
-            $cost += $item->getCost();
-            $value += $item->getValue();
+            $cost += $item->getCost() * $item->getCount();
+            $value += $item->getValue() * $item->getCount();
         }
         $this->assertEquals($res[$this->key_max_value], $value);
         if ($fit && $cost > 0) $this->assertEquals($pack->getVolume(), $cost);
@@ -41,16 +42,30 @@ class KnapsackSolutionTestHelper extends TestCase {
         }
     }
 
+    public function outputResult($class, $res) {
+        $out = sprintf("[%s] [Loop:%s] [Value:%s] ", 
+            substr($class, strrpos($class, "\\")+1),
+            $res[$this->key_loop_count],
+            $res[$this->key_max_value]
+        );
+        echo PHP_EOL . $out . PHP_EOL;
+        foreach ($res[$this->key_max_items] as $item) {
+            echo "  [" . $item . "]" . PHP_EOL;
+        }
+    }
+
     public function performChecking($solutions, $items, $pack, $expect_max_value = null) {
         $res_no_fit = [];
         $res_do_fit = [];
         foreach ($solutions as $class) {
             $res = $class::fillPack($items, $pack ,false);
             $this->checkCostAndValue($items, $pack, $res, false, $expect_max_value);
+            $this->outputResult($class, $res);
             $res_no_fit[] = $res;
 
             $res = $class::fillPack($items, $pack ,true);
             $this->checkCostAndValue($items, $pack, $res, true, $expect_max_value);
+            $this->outputResult($class, $res);
             $res_do_fit[] = $res;
         }
         $this->checkResultSets($res_no_fit);
