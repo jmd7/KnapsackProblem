@@ -42,30 +42,43 @@ class KnapsackSolutionTestHelper extends TestCase {
         }
     }
 
-    public function outputResult($class, $method, $res) {
-        $out = sprintf("[%s::%s] [Loop:%s] [Value:%s] ", 
+    public function outputResult($items, $pack, $class, $method, $res, $time) {
+        $best_items = "";
+        $best_cost = 0;
+        foreach ($res[$this->key_max_items] as $item) {
+            $best_items .= "  [" . $item . "]" . PHP_EOL;
+            $best_cost += $item->getCost()*$item->getCount();
+        }
+
+        $out = sprintf("[%s::%s] [Pack=%d] [Best Cost=%d] [Best Value=%d]", 
             substr($class, strrpos($class, "\\")+1),
             substr($method, strrpos($method, ":")+1), 
-            $res[$this->key_loop_count],
+            $pack->getVolume(),
+            $best_cost,
             $res[$this->key_max_value]
         );
         echo PHP_EOL . $out . PHP_EOL;
-        foreach ($res[$this->key_max_items] as $item) {
-            echo "  [" . $item . "]" . PHP_EOL;
-        }
+        $out = sprintf("[Time=%.6f] [Loop=%s]", 
+            $time,
+            $res[$this->key_loop_count]
+        );
+        echo $out . PHP_EOL;
+        echo $best_items . PHP_EOL;
     }
 
     public function performChecking($method, $solutions, $items, $pack, $expect_max_value = null) {
         $res_no_fit = [];
         $res_do_fit = [];
         foreach ($solutions as $class) {
+            $time_start = microtime(true);
             $res = $class::fillPack($items, $pack ,false);
-            $this->outputResult($class, $method, $res);
+            $this->outputResult($items, $pack, $class, $method, $res, microtime(true) - $time_start);
             $this->checkCostAndValue($items, $pack, $res, false, $expect_max_value);
             $res_no_fit[] = $res;
 
+            $time_start = microtime(true);
             $res = $class::fillPack($items, $pack ,true);
-            $this->outputResult($class, $method, $res);
+            $this->outputResult($items, $pack, $class, $method, $res, microtime(true) - $time_start);
             $this->checkCostAndValue($items, $pack, $res, true, $expect_max_value);
             $res_do_fit[] = $res;
         }

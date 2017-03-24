@@ -35,10 +35,19 @@ class CompletePackSolutionTest extends TestCase {
     }
 
     public function test03() {
-        $items[] = new KI("苹果", 5, 5700, 7);
-        $items[] = new KI("草莓", 3, 1200, 5);
+        $items[] = new KI("@1", 5, 5700, INFINITE);
+        $items[] = new KI("@2", 3, 1200, INFINITE);
 
         $pack = new KP("背包", 29);
+        
+        Helper::getInstance()->performChecking(__METHOD__, $this->solutions, $items, $pack);
+    }
+
+    public function test04() {
+        $items[] = new KI("#1", 13, 135, INFINITE);
+        $items[] = new KI("#2", 7, 76, INFINITE);
+
+        $pack = new KP("背包", 107);
         
         Helper::getInstance()->performChecking(__METHOD__, $this->solutions, $items, $pack);
     }
