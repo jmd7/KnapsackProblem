@@ -13,26 +13,27 @@ class ZeroOnePack_Solution_02 extends AbstractKnapsackSolution {
             $f = array_fill(0, $V+1, null);
             $f[0] = 0;
         } else $f = array_fill(0, $V+1, 0);
-        $g = array_fill(0, $V+1, -1);
-        $g_max = [];
+        $g = array_fill(0, $N, array_fill(0, $V+1, -1));
 
         for ($i = 0; $i < $N; $i++) {
-            self::fillItem($items[$i], $i, $V, $f, $g, $loop_count, $g_max);
+            self::fillItem($items[$i], $i, $V, $f, $g, $loop_count);
         }
-        // print_r($f); print_r($g);
 
         $res = array();
         $res["Loop count"] = $loop_count;
         $res["Value of best solution"] = $f[$V];
         $res["Items of best solution"] = array();
-        $V_real = $V;
-        while ($f[$V_real] == $f[$V_real -1]) $V_real--;
-        foreach ($g_max as $gg) {
-            for ($i = $V; $i > 0 && $gg[$i] >= 0; $i = $i - $items[$gg[$i]]->getCost()) {
-                $res["Items of best solution"][] = $items[$gg[$i]]; //sprintf("%s", $items[$gg[$i]]);
-                // echo $items[$gg[$i]]."\n";
-            }
+
+        $i = $N - 1;
+        $v = $V;
+        while ($i >= 0 && $v > 0 && $g[$i][$v] >= 0) {
+            $selected = $g[$i][$v];
+            $res["Items of best solution"][] = $items[$selected];
+            $v = $v - $items[$selected]->getCost();
+            if ($i > 0) $i = $g[$selected-1][$v];
+            else break;
         }
+
         return $res;
     }
 
@@ -40,11 +41,10 @@ class ZeroOnePack_Solution_02 extends AbstractKnapsackSolution {
         for ($v = $V; $v >= $item->getCost(); $v--) {
             $left = is_null($f[$v-$item->getCost()]) ? null : $f[$v-$item->getCost()] + $item->getValue();
             $right = $f[$v];
-            $left_item = $i;
-            $right_item = $g[$v];
+            $left_item = is_null($f[$v-$item->getCost()]) ? -1 : $i;
+            $right_item = ($i == 0) ? -1 : $g[$i-1][$v];
             
-            $f[$v] = self::kp_max_tracing($left, $right, $g[$v], $left_item, $right_item);
-            if ($v == $V && $f[$v] == $left && $left > $right) $reserves[0] = [$g];
+            $f[$v] = self::kp_max_tracing($left, $right, $g[$i][$v], $left_item, $right_item);
             $loop_count++;
         }
     }

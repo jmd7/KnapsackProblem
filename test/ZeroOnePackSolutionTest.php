@@ -9,6 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class ZeroOnePackSolutionTest extends TestCase {
     private $solutions = [
+        "rg4\\knapsack\\ZeroOnePack_Solution_00",
         "rg4\\knapsack\\ZeroOnePack_Solution_01",
         "rg4\\knapsack\\ZeroOnePack_Solution_02",
         "rg4\\knapsack\\ZeroOnePack_Solution_final",
@@ -23,7 +24,7 @@ class ZeroOnePackSolutionTest extends TestCase {
 
         $pack = new KP("背包", 13);
 
-        Helper::getInstance()->performChecking($this->solutions, $items, $pack, 14650);
+        Helper::getInstance()->performChecking(__METHOD__, $this->solutions, $items, $pack, 14650);
     }
 
     public function test02() {
@@ -64,7 +65,7 @@ class ZeroOnePackSolutionTest extends TestCase {
 
         $pack = new KP("背包", 43);
         
-        Helper::getInstance()->performChecking($this->solutions, $items, $pack, 49100);
+        Helper::getInstance()->performChecking(__METHOD__, $this->solutions, $items, $pack, 49100);
     }
 
     public function test03() {
@@ -74,7 +75,29 @@ class ZeroOnePackSolutionTest extends TestCase {
 
         $pack = new KP("背包", 10);
 
-        Helper::getInstance()->performChecking($this->solutions, $items, $pack);
+        Helper::getInstance()->performChecking(__METHOD__, $this->solutions, $items, $pack);
+    }
+
+    public function test04() {
+        $items[] = new KI("#1", 100, 20, 1);
+        $items[] = new KI("#2", 14, 18, 1);
+        $items[] = new KI("#3", 10, 15, 1);
+
+        $pack = new KP("背包", 116);
+
+        Helper::getInstance()->performChecking(__METHOD__, $this->solutions, $items, $pack);
+    }
+
+    public function test05() {
+        $items[] = new KI("#1", 2, 6, 1);
+        $items[] = new KI("#2", 2, 3, 1);
+        $items[] = new KI("#3", 6, 5, 1);
+        $items[] = new KI("#4", 5, 4, 1);
+        $items[] = new KI("#5", 4, 6, 1);
+
+        $pack = new KP("背包", 10);
+
+        Helper::getInstance()->performChecking(__METHOD__, $this->solutions, $items, $pack);
     }
 
 }

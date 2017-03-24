@@ -3,7 +3,7 @@ namespace rg4\knapsack;
 
 require_once 'autoload.php';
 
-class ZeroOnePack_Solution_01 extends AbstractKnapsackSolution {
+class ZeroOnePack_Solution_00 extends AbstractKnapsackSolution {
     public static function fillPack(array $items, KnapsackPack $pack, bool $fitPackVolume = false) {
         $N = count($items);
         $V = $pack->getVolume();
@@ -13,12 +13,10 @@ class ZeroOnePack_Solution_01 extends AbstractKnapsackSolution {
             $f = array_fill(0, $N+1, array_fill(0, $V+1, null));
             for ($i = 0; $i <= $N; $i++) $f[$i][0] = 0;
         } else $f = array_fill(0, $N+1, array_fill(0, $V+1, 0));
-        $g = array_fill(0, $N+1, array_fill(0, $V+1, -1));
 
         for ($i = 1; $i <= $N; $i++) {
-            self::fillItem($items[$i-1], $i, $V, $f, $g, $loop_count);
+            self::fillItem($items[$i-1], $i, $V, $f, $dummy, $loop_count);
         }
-        //self::print_array($f); self::print_array($g);
 
         $res = array();
         $res["Loop count"] = $loop_count;
@@ -29,7 +27,7 @@ class ZeroOnePack_Solution_01 extends AbstractKnapsackSolution {
         $v = $V;
         while ($i > 0 && $v > 0) {
             if ($v >= $items[$i-1]->getCost()) {
-                if ($g[$i][$v] == 1) {
+                if ($f[$i][$v] == $f[$i-1][$v - $items[$i-1]->getCost()] + $items[$i-1]->getValue()) {
                     $res["Items of best solution"][] = $items[$i-1]; //sprintf("%s", $items[$i-1]);
                     $v = $v - $items[$i-1]->getCost();
                 }
@@ -45,7 +43,6 @@ class ZeroOnePack_Solution_01 extends AbstractKnapsackSolution {
             $right = $f[$i-1][$v];
             
             $f[$i][$v] = self::kp_max($left, $right);
-            if ($f[$i][$v] == $left && $left > $right) $g[$i][$v] = 1;
             $loop_count++;
         }
     }

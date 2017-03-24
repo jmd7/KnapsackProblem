@@ -42,9 +42,10 @@ class KnapsackSolutionTestHelper extends TestCase {
         }
     }
 
-    public function outputResult($class, $res) {
-        $out = sprintf("[%s] [Loop:%s] [Value:%s] ", 
+    public function outputResult($class, $method, $res) {
+        $out = sprintf("[%s::%s] [Loop:%s] [Value:%s] ", 
             substr($class, strrpos($class, "\\")+1),
+            substr($method, strrpos($method, ":")+1), 
             $res[$this->key_loop_count],
             $res[$this->key_max_value]
         );
@@ -54,18 +55,18 @@ class KnapsackSolutionTestHelper extends TestCase {
         }
     }
 
-    public function performChecking($solutions, $items, $pack, $expect_max_value = null) {
+    public function performChecking($method, $solutions, $items, $pack, $expect_max_value = null) {
         $res_no_fit = [];
         $res_do_fit = [];
         foreach ($solutions as $class) {
             $res = $class::fillPack($items, $pack ,false);
+            $this->outputResult($class, $method, $res);
             $this->checkCostAndValue($items, $pack, $res, false, $expect_max_value);
-            $this->outputResult($class, $res);
             $res_no_fit[] = $res;
 
             $res = $class::fillPack($items, $pack ,true);
+            $this->outputResult($class, $method, $res);
             $this->checkCostAndValue($items, $pack, $res, true, $expect_max_value);
-            $this->outputResult($class, $res);
             $res_do_fit[] = $res;
         }
         $this->checkResultSets($res_no_fit);

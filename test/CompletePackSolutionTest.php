@@ -22,7 +22,7 @@ class CompletePackSolutionTest extends TestCase {
 
         $pack = new KP("背包", 14);
 
-        Helper::getInstance()->performChecking($this->solutions, $items, $pack, 15940);
+        Helper::getInstance()->performChecking(__METHOD__, $this->solutions, $items, $pack, 15940);
     }
 
     public function test02() {
@@ -31,7 +31,7 @@ class CompletePackSolutionTest extends TestCase {
 
         $pack = new KP("背包", 6);
         
-        Helper::getInstance()->performChecking($this->solutions, $items, $pack);
+        Helper::getInstance()->performChecking(__METHOD__, $this->solutions, $items, $pack);
     }
 
     public function test03() {
@@ -40,6 +40,6 @@ class CompletePackSolutionTest extends TestCase {
 
         $pack = new KP("背包", 29);
         
-        Helper::getInstance()->performChecking($this->solutions, $items, $pack);
+        Helper::getInstance()->performChecking(__METHOD__, $this->solutions, $items, $pack);
     }
 }

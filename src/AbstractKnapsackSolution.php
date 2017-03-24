@@ -79,6 +79,7 @@ abstract class AbstractKnapsackSolution {
      * @codeCoverageIgnore
     **/
     static function print_array(array $arr) {
+        echo PHP_EOL;
         foreach ($arr as $v1) {
             if (is_array($v1)) {
                 self::print_array($v1);
