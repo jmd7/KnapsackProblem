@@ -57,8 +57,8 @@ class KnapsackSolutionTestHelper extends TestCase {
             $best_cost,
             $res[$this->key_max_value]
         );
-        echo PHP_EOL . $out . PHP_EOL;
-        $out = sprintf("[Time=%.6f] [Loop=%s]", 
+        echo PHP_EOL . $out;
+        $out = sprintf(" [Time=%.6f] [Loop=%s]", 
             $time,
             $res[$this->key_loop_count]
         );
