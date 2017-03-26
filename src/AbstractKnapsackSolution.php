@@ -84,7 +84,7 @@ abstract class AbstractKnapsackSolution {
             if (is_array($v1)) {
                 self::print_array($v1);
             } else {
-                echo $v1."\t";
+                echo "[$v1]\t";
             }
         }
         echo PHP_EOL;

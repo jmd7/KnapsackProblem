@@ -11,8 +11,8 @@ class MultiplePackSolutionTest extends TestCase {
     private $solutions = [
         // "rg4\\knapsack\\MultiplePack_Solution_01",
         // "rg4\\knapsack\\MultiplePack_Solution_02",
-        "rg4\\knapsack\\MultiplePack_Solution_03",
-        // "rg4\\knapsack\\MultiplePack_Solution_final",
+        // "rg4\\knapsack\\MultiplePack_Solution_03",
+        "rg4\\knapsack\\MultiplePack_Solution_final",
     ];
 
     public function test01() {
@@ -24,10 +24,10 @@ class MultiplePackSolutionTest extends TestCase {
 
         $pack = new KP("背包", 43);
 
-        Helper::getInstance()->performChecking(__METHOD__, $this->solutions, $items, $pack);
+        Helper::getInstance()->performChecking(__METHOD__, $this->solutions, $items, $pack); //, 49100);
     }
 
-    public function test02() {
+    /*public function test02() {
         //$items[] = new KI("栗子", 4, 4500, INFINITE);
         $items[] = new KI("苹果", 5, 5700, 5);
         $items[] = new KI("橘子", 2, 2270, 5);
@@ -37,5 +37,5 @@ class MultiplePackSolutionTest extends TestCase {
         $pack = new KP("背包", 14);
         
         Helper::getInstance()->performChecking(__METHOD__, $this->solutions, $items, $pack);
-    }
+    }*/
 }

@@ -1,7 +1,7 @@
 <?php
 namespace rg4\knapsack;
 
-require_once 'Autoloader.php';
+require_once 'autoload.php';
 
 class MultiplePack_Solution_01 extends AbstractKnapsackSolution {
     public static function fillPack(array $items, KnapsackPack $pack, bool $fitPackVolume = false) {
@@ -15,11 +15,11 @@ class MultiplePack_Solution_01 extends AbstractKnapsackSolution {
         } else $f = array_fill(0, $N+1, array_fill(0, $V+1, 0));
         $g = array_fill(0, $N+1, array_fill(0, $V+1, array()));
 
-        for ($i = 1; $i <= $N; $i++) {
-            self::fillItem($items[$i-1], $i, $V, $f, $g, $loop_count);
+        for ($i = 0; $i < $N; $i++) {
+            self::fillItem($items[$i], $i, $V, $f, $g, $loop_count);
         }
 
-        // print_r($f); print_r($g);
+        // self::print_array($f); self::print_array($g); 
 
         $res = array();
         $res["Value of best solution"] = $f[$N][$V];
@@ -40,17 +40,17 @@ class MultiplePack_Solution_01 extends AbstractKnapsackSolution {
         return $res;
     }
 
-    public static function fillItem(KnapsackItem $item, $i, $V, &$f, &$g, &$loop_count, $reserve = null) {
+    public static function fillItem(KnapsackItem $item, $i, $V, &$f, &$g, &$loop_count, &...$reserves) {
         for ($v = $item->getCost(); $v <= $V; $v++) {
-            for ($k = 1; $k <= $item->getCount() && $k*$item->getCost() <= $v; $k++) {
-                $left = is_null($f[$i-1][$v-$k*$item->getCost()]) ? null : $f[$i-1][$v-$k*$item->getCost()] + $k*$item->getValue();
-                $right = ($k == 0) ? $f[$i-1][$v] : $f[$i][$v];
+            for ($k = 0; $k <= $item->getCount() && $k*$item->getCost() <= $v; $k++) {
+                $left = is_null($f[$i][$v-$k*$item->getCost()]) ? null : $f[$i][$v-$k*$item->getCost()] + $k*$item->getValue();
+                $right = ($k == 0) ? $f[$i][$v] : $f[$i+1][$v];
 
-                $f[$i][$v] = self::kp_max($left, $right);
-                if ($f[$i][$v] == $left) {
-                    $g[$i][$v] = $g[$i-1][$v-$k*$item->getCost()];
-                    for ($gg = 0; $gg < $k; $gg++) array_push($g[$i][$v], $i);
-                } else $g[$i][$v] = ($k == 0) ? $g[$i-1][$v] : $g[$i][$v];
+                $f[$i+1][$v] = self::kp_max($left, $right);
+                if ($f[$i+1][$v] == $left) {
+                    $g[$i+1][$v] = $g[$i][$v-$k*$item->getCost()];
+                    for ($gg = 0; $gg < $k; $gg++) array_push($g[$i+1][$v], $i+1);
+                } else $g[$i+1][$v] = ($k == 0) ? $g[$i][$v] : $g[$i+1][$v];
                 
                 $loop_count++;
             }
@@ -59,22 +59,4 @@ class MultiplePack_Solution_01 extends AbstractKnapsackSolution {
     
 }
 
-// $items[] = new KnapsackItem("栗子", 4, 4500, 5);
-$items[] = new KnapsackItem("苹果", 5, 5700, 7);
-// $items[] = new KnapsackItem("橘子", 2, 2300, 7);
-$items[] = new KnapsackItem("草莓", 3, 1200, 5);
-// $items[] = new KnapsackItem("甜瓜", 6, 5600, 2);
-
-$pack = new KnapsackPack("背包", 29);
-
-// //$items[] = new KnapsackItem("栗子", 4, 4500, INFINITE);
-// $items[] = new KnapsackItem("苹果", 5, 5700, 5);
-// $items[] = new KnapsackItem("橘子", 2, 2270, 5);
-// //$items[] = new KnapsackItem("草莓", 1, 1100, INFINITE);
-// //$items[] = new KnapsackItem("甜瓜", 6, 5600, INFINITE);
-
-// $pack = new KnapsackPack("背包", 14);
-
-MultiplePack_Solution_01::run($items, $pack, false);
-MultiplePack_Solution_01::run($items, $pack, true);
 ?>
