@@ -124,18 +124,28 @@ class AbstractKnapsackSolutionTest extends TestCase {
     }
 
     public function testConvertTo01Pack() {
+        $limit = 9999;
         $items = $items_org = "string";
         $name_default = "Knapsack Item";
         
-        aKS::convertTo01Pack($items);
+        aKS::convertTo01Pack($items, $limit, "Cost");
         $this->assertEquals($items, $items_org);
 
         $items = $items_org = array();
-        aKS::convertTo01Pack($items);
+        aKS::convertTo01Pack($items, $limit, "Cost");
         $this->assertEquals($items, $items_org);
 
         $items = $items_org = [new DateTime()];
-        aKS::convertTo01Pack($items);
+        aKS::convertTo01Pack($items, $limit, "Cost");
+        $this->assertEquals($items, $items_org);
+
+        $items = $items_org = [
+            new KI("a", 1, 1, 1),
+            new KI("0", 1, 1, 1),
+            new KI("A", 1, 1, 1),
+            new KI(" ", 1, 1, 1),
+        ];
+        aKS::convertTo01Pack($items, $limit, "Name");
         $this->assertEquals($items, $items_org);
 
         $items = $items_org = [
@@ -145,7 +155,7 @@ class AbstractKnapsackSolutionTest extends TestCase {
             new KI(" ", 1, 1, 1),
         ];
 
-        aKS::convertTo01Pack($items);
+        aKS::convertTo01Pack($items, $limit, "Cost");
         $this->assertCount(4, $items);
         $this->assertTrue(in_array(new KI("a 1", 1, 1, 1), $items, false));
         $this->assertTrue(in_array(new KI($name_default." 1", 1, 1, 1), $items, false));
@@ -159,7 +169,7 @@ class AbstractKnapsackSolutionTest extends TestCase {
             new KI(" ", 1, 1, 4),
         ];
 
-        aKS::convertTo01Pack($items);
+        aKS::convertTo01Pack($items, $limit, "Cost");
         $this->assertCount(10, $items);
         $this->assertTrue(in_array(new KI("a 1", 1, 1, 1), $items));
         $this->assertTrue(in_array(new KI("a 2", 1, 1, 1), $items));
@@ -171,6 +181,64 @@ class AbstractKnapsackSolutionTest extends TestCase {
         $this->assertTrue(in_array(new KI($name_default." 4", 1, 1, 1), $items));
         $this->assertTrue(in_array(new KI($name_default." 5", 1, 1, 1), $items));
         $this->assertTrue(in_array(new KI($name_default." 6", 1, 1, 1), $items));
+
+        $items = $items_org = [
+            new KI("#1", 1, 1, INFINITE),
+            new KI("#2", 2, 1, 9),
+        ];
+        $limit = 11;
+
+        aKS::convertTo01Pack($items, $limit, "Cost");
+        $this->assertCount(16, $items);
+        $this->assertTrue(in_array(new KI("#1 1", 1, 1, 1), $items));
+        $this->assertTrue(in_array(new KI("#1 3", 1, 1, 1), $items));
+        $this->assertTrue(in_array(new KI("#1 7", 1, 1, 1), $items));
+        $this->assertTrue(in_array(new KI("#1 10", 1, 1, 1), $items));
+        $this->assertTrue(in_array(new KI("#1 11", 1, 1, 1), $items));
+        $this->assertFalse(in_array(new KI("#1 12", 1, 1, 1), $items));
+        $this->assertTrue(in_array(new KI("#2 1", 2, 1, 1), $items));
+        $this->assertTrue(in_array(new KI("#2 2", 2, 1, 1), $items));
+        $this->assertTrue(in_array(new KI("#2 3", 2, 1, 1), $items));
+        $this->assertTrue(in_array(new KI("#2 5", 2, 1, 1), $items));
+        $this->assertFalse(in_array(new KI("#2 6", 2, 1, 1), $items));
+
+        $items = $items_org = [
+            new KI("#1", 1, 3, INFINITE),
+            new KI("#2", 1, 5, 9),
+        ];
+        $limit = 14;
+
+        aKS::convertTo01Pack($items, $limit, "Value");
+        $this->assertCount(6, $items);
+        $this->assertTrue(in_array(new KI("#1 1", 1, 3, 1), $items));
+        $this->assertTrue(in_array(new KI("#1 2", 1, 3, 1), $items));
+        $this->assertTrue(in_array(new KI("#1 3", 1, 3, 1), $items));
+        $this->assertTrue(in_array(new KI("#1 4", 1, 3, 1), $items));
+        $this->assertFalse(in_array(new KI("#1 5", 1, 3, 1), $items));
+        $this->assertTrue(in_array(new KI("#2 1", 1, 5, 1), $items));
+        $this->assertTrue(in_array(new KI("#2 2", 1, 5, 1), $items));
+        $this->assertFalse(in_array(new KI("#2 3", 1, 5, 1), $items));
+
+        $items = $items_org = [
+            new KI("#1", 1, 1, INFINITE),
+            new KI("#2", 1, 2, INFINITE),
+        ];
+        $limit = 5;
+
+        aKS::convertTo01Pack($items, $limit, "Count");
+        $this->assertCount(10, $items);
+        $this->assertTrue(in_array(new KI("#1 1", 1, 1, 1), $items));
+        $this->assertTrue(in_array(new KI("#1 2", 1, 1, 1), $items));
+        $this->assertTrue(in_array(new KI("#1 3", 1, 1, 1), $items));
+        $this->assertTrue(in_array(new KI("#1 4", 1, 1, 1), $items));
+        $this->assertTrue(in_array(new KI("#1 5", 1, 1, 1), $items));
+        $this->assertFalse(in_array(new KI("#1 6", 1, 1, 1), $items));
+        $this->assertTrue(in_array(new KI("#2 1", 1, 2, 1), $items));
+        $this->assertTrue(in_array(new KI("#2 2", 1, 2, 1), $items));
+        $this->assertTrue(in_array(new KI("#2 3", 1, 2, 1), $items));
+        $this->assertTrue(in_array(new KI("#2 4", 1, 2, 1), $items));
+        $this->assertTrue(in_array(new KI("#2 5", 1, 2, 1), $items));
+        $this->assertFalse(in_array(new KI("#2 6", 1, 2, 1), $items));
     }
 }
 

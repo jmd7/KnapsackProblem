@@ -54,15 +54,27 @@ abstract class AbstractKnapsackSolution {
         }
     }
 
-    static function convertTo01Pack(&$items) {
+    static function convertTo01Pack(&$items, $limit, $key = "Cost") {
         if (!is_array($items) || empty($items) || !$items[0] instanceof KnapsackItem) return;
+        $method_arr = ["Cost", "Value", "Count"];
+        if (!in_array($key, $method_arr)) return;
 
         $res_items = array();
         $names = array();
         foreach ($items as $item) {
+            $total = 0;
             for ($i = 1; $i <= $item->getCount(); $i++) {
                 if (array_key_exists($item->getName(), $names)) $names[$item->getName()]++;
                 else $names[$item->getName()] = 1;
+
+                if ($key == "Count") {
+                    $total++;
+                } else {
+                    $method = "get" . $key;
+                    $total += $item->$method();
+                }
+                if ($total > $limit) break;
+
                 $res_items[] = new KnapsackItem(
                     $item->getName()." ".$names[$item->getName()], 
                     $item->getCost(), 
