@@ -15,7 +15,7 @@ spl_autoload_register(function ($class) {
     // project-specific namespace prefix
     $prefix = 'rg4\\knapsack\\';
     // base directory for the namespace prefix
-    $base_dir = __DIR__.'\\';
+    $base_dir = __DIR__.'/';
     // does the class use the namespace prefix?
     $len = strlen($prefix);
     if (strncmp($prefix, $class, $len) !== 0) {
