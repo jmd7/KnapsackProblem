@@ -9,9 +9,9 @@ use PHPUnit\Framework\TestCase;
 
 class MultiplePackSolutionTest extends TestCase {
     private $solutions = [
-        // "rg4\\knapsack\\MultiplePack_Solution_01",
-        // "rg4\\knapsack\\MultiplePack_Solution_02",
-        // "rg4\\knapsack\\MultiplePack_Solution_03",
+        "rg4\\knapsack\\MultiplePack_Solution_01",
+        "rg4\\knapsack\\MultiplePack_Solution_02",
+        "rg4\\knapsack\\MultiplePack_Solution_03",
         "rg4\\knapsack\\MultiplePack_Solution_final",
     ];
 
@@ -24,18 +24,19 @@ class MultiplePackSolutionTest extends TestCase {
 
         $pack = new KP("背包", 43);
 
-        Helper::getInstance()->performChecking(__METHOD__, $this->solutions, $items, $pack); //, 49100);
+        Helper::getInstance()->performChecking(__METHOD__, $this->solutions, $items, $pack, 49100);
     }
 
-    /*public function test02() {
-        //$items[] = new KI("栗子", 4, 4500, INFINITE);
+    public function test02() {
         $items[] = new KI("苹果", 5, 5700, 5);
         $items[] = new KI("橘子", 2, 2270, 5);
-        //$items[] = new KI("草莓", 1, 1100, INFINITE);
-        //$items[] = new KI("甜瓜", 6, 5600, INFINITE);
+        $items[] = new KI("栗子", 4, 4500, 9);
+        //$items[] = new KI("草莓", 1, 1100, 9);
+        //$items[] = new KI("甜瓜", 6, 5600, 9);
 
-        $pack = new KP("背包", 14);
+        // $pack = new KP("背包", 14);
+        $pack = new KP("背包", 23);
         
         Helper::getInstance()->performChecking(__METHOD__, $this->solutions, $items, $pack);
-    }*/
+    }
 }

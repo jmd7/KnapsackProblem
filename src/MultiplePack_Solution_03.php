@@ -5,7 +5,7 @@ require_once 'autoload.php';
 
 class MultiplePack_Solution_03 extends AbstractKnapsackSolution {
     public static function fillPack(array $items, KnapsackPack $pack, bool $fitPackVolume = false) {
-        self::convertTo01Pack($items);
+        self::convertTo01Pack($items, $pack->getVolume(), "Cost");
         return ZeroOnePack_Solution_final::fillPack($items, $pack, $fitPackVolume);
     }
 

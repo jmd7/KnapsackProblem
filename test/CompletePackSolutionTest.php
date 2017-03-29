@@ -9,6 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class CompletePackSolutionTest extends TestCase {
     private $solutions = [
+        "rg4\\knapsack\\CompletePack_Solution_00",
         "rg4\\knapsack\\CompletePack_Solution_01",
         "rg4\\knapsack\\CompletePack_Solution_02",
         "rg4\\knapsack\\CompletePack_Solution_03",
