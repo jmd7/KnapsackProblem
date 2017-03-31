@@ -87,6 +87,17 @@ abstract class AbstractKnapsackSolution {
         $items = $res_items;
     }
 
+    static function merge_array(array $arr1, array $arr2) : array {
+        if (!is_array($arr1) || !is_array($arr2)) return null;
+        $res = $arr1;
+
+        foreach ($arr2 as $v) {
+            if (!in_array($v, $res)) $res[] = $v;
+        }
+
+        return $res;
+    }
+
     /**
      * @codeCoverageIgnore
     **/

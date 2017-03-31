@@ -240,6 +240,55 @@ class AbstractKnapsackSolutionTest extends TestCase {
         $this->assertTrue(in_array(new KI("#2 5", 1, 2, 1), $items));
         $this->assertFalse(in_array(new KI("#2 6", 1, 2, 1), $items));
     }
+
+    public function testMergeArray() {
+        $arr1 = [1,2,3,4,5];
+        $arr2 = [6,7];
+        $res = aKS::merge_array($arr1, $arr2);
+        $this->assertEquals(7, count($res));
+
+        $arr1 = [1,2,3,4,5];
+        $arr2 = [];
+        $res = aKS::merge_array($arr1, $arr2);
+        $this->assertEquals(5, count($res));
+
+        $arr1 = [];
+        $arr2 = [6,7];
+        $res = aKS::merge_array($arr1, $arr2);
+        $this->assertEquals(2, count($res));
+
+        $arr1 = [1,2,3,4,5];
+        $arr2 = [3,4,5];
+        $res = aKS::merge_array($arr1, $arr2);
+        $this->assertEquals(5, count($res));
+
+        $arr1 = [1,2,3];
+        $arr2 = [1,2,3,4,5];
+        $res = aKS::merge_array($arr1, $arr2);
+        $this->assertEquals(5, count($res));
+
+        $arr1 = [1,2,3];
+        $arr2 = [1,2,3];
+        $res = aKS::merge_array($arr1, $arr2);
+        $this->assertEquals(3, count($res));
+
+        $arr1 = [1,2,3];
+        $arr2 = [3,4,5];
+        $res = aKS::merge_array($arr1, $arr2);
+        $this->assertEquals(5, count($res));
+
+        $arr1 = [];
+        $arr2 = [];
+        $res = aKS::merge_array($arr1, $arr2);
+        $this->assertEquals(0, count($res));
+
+        $arr1 = "string";
+        $arr2 = [6,7];
+        $this->expectException(Error::class);
+        aKS::merge_array($arr1, $arr2);
+        $this->expectException(Error::class);
+        aKS::merge_array($arr2, $arr1);
+    }
 }
 
 ?>
