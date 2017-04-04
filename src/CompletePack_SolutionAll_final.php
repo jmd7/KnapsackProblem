@@ -93,12 +93,12 @@ class CompletePack_SolutionAll_final extends AbstractKnapsackSolution {
             $sol = [];
             foreach ($arr as $v) {
                 // $sol[] = $items[$v-1];
-                if (!isset($sol[$items[$v-1]->getName()])) {
-                    $new_item = clone $items[$v-1];
-                    $sol[$items[$v-1]->getName()] = $new_item->setCount(1);
+                if (!isset($sol[$items[$v]->getName()])) {
+                    $new_item = clone $items[$v];
+                    $sol[$items[$v]->getName()] = $new_item->setCount(1);
                 } else
-                    $sol[$items[$v-1]->getName()]->setCount(
-                        $sol[$items[$v-1]->getName()]->getCount()+1);
+                    $sol[$items[$v]->getName()]->setCount(
+                        $sol[$items[$v]->getName()]->getCount()+1);
             }
             $res["Best Solutions"][] = $sol;
         }
@@ -124,12 +124,12 @@ class CompletePack_SolutionAll_final extends AbstractKnapsackSolution {
             if ($f[$v] == $left && $left > $right) {
                 $reserves[0][$i+1][$v] = $reserves[0][$i+1][$v-$item->getCost()];
                 $reserves[1][$i+1][$v] = $reserves[1][$i+1][$v-$item->getCost()];
-                for($x = 0; $x<count($reserves[1][$i+1][$v]); $x++) $reserves[1][$i+1][$v][$x][] = $i+1;
+                for($x = 0; $x<count($reserves[1][$i+1][$v]); $x++) $reserves[1][$i+1][$v][$x][] = $i;
             } else if ($f[$v] == $left && $left == $right) {
                 $reserves[0][$i+1][$v] = $reserves[0][$i+1][$v-$item->getCost()] + $reserves[0][$i+1][$v];
 
                 $reserves[1][$i+1][$v] = $reserves[1][$i+1][$v-$item->getCost()];
-                for($x = 0; $x<count($reserves[1][$i+1][$v]); $x++) $reserves[1][$i+1][$v][$x][] = $i+1;
+                for($x = 0; $x<count($reserves[1][$i+1][$v]); $x++) $reserves[1][$i+1][$v][$x][] = $i;
                 $reserves[1][$i+1][$v] = array_merge($reserves[1][$i+1][$v], $reserves[1][$i+1][$v]);
             } else if ($f[$v] == $right) {
                 $reserves[0][$i+1][$v] = $reserves[0][$i+1][$v];
