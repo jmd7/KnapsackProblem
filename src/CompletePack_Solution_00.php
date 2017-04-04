@@ -45,7 +45,6 @@ class CompletePack_Solution_00 extends AbstractKnapsackSolution {
 
     public static function fillItem(KnapsackItem $item, $i, $V, &$f, &$g, &$loop_count, &...$reserves) {
         for ($v = 0; $v <= $V; $v++) {
-            $g_org = $g[$v];
             for ($k = 0; $k*$item->getCost() <= $v; $k++) {
                 $left = is_null($f[$i-1][$v-$k*$item->getCost()]) ? null : $f[$i-1][$v-$k*$item->getCost()] + $k*$item->getValue();
                 $right = ($k == 0) ? $f[$i-1][$v] : $f[$i][$v];
