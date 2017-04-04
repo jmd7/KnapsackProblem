@@ -93,8 +93,10 @@ class KnapsackSolutionTestHelper extends TestCase {
             $time,
             $res[HELP::KEY_LOOP_COUNT]
         );
-        echo $out . PHP_EOL;
-        echo $best_items . PHP_EOL;
+        echo $out;
+        if (array_key_exists(HELP::KEY_COUNT_SOLUTIONS, $res)) 
+            echo " [Count of Best Solutions=" . $res[HELP::KEY_COUNT_SOLUTIONS] . "]";
+        echo PHP_EOL . $best_items . PHP_EOL;
     }
 
     public function performChecking($method, $solutions, $items, $pack, $expect_max_value = null) {
@@ -132,7 +134,7 @@ class KnapsackSolutionTestHelper extends TestCase {
             $res = $class::fillPack($items, $pack ,true);
             $this->outputResult($items, $pack, $class, $method, $res, microtime(true) - $time_start);
             $this->checkCostAndValue($items, $pack, $res, true, $expect_max_value);
-            $this->checkAllSolutions($items, $pack, $res, false, $expect_max_value);
+            $this->checkAllSolutions($items, $pack, $res, true, $expect_max_value);
             $res_do_fit[] = $res;
         }
         $this->checkResultSets($res_no_fit);
